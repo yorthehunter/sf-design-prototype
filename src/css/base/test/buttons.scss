@@ -1,0 +1,24 @@
+@import "core";
+
+.sf-button {
+  &.sm {
+    font-size: map-get($type-sizes, 'component-2');
+    line-height: map-get($line-heights, 'component-2');
+    padding: .5rem 1rem;
+  }
+
+  &.md {
+    font-size: map-get($type-sizes, 'component-1');
+    line-height: map-get($line-heights, 'component-1');
+    padding: 1.5rem 3rem;
+  }
+
+  &.cta {
+    background-color: $color-watermelon;
+    color: $color-white;
+  }
+
+  .icon {
+    font-family: $sf-icon-font;
+  }
+}

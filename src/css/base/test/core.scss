@@ -1,0 +1,150 @@
+@import "reset";
+@import "colors";
+@import "type";
+@import "spacing";
+
+// Breakpoints
+@mixin breakpoint($point) {
+  @if $point == lg {
+    @media (min-width: 960px) { @content ; }
+  }
+   @else if $point == md {
+    @media (min-width: 720px) { @content ; }
+  }
+  @else if $point == sm {
+    @media (max-width: 540px)  { @content ; }
+  }
+}
+
+@mixin setup-type($name, $font-weight: false, $letter-spacing: false, $text-transform: false) {
+  @if $font-weight    { font-weight:    $font-weight; }
+  @if $letter-spacing { letter-spacing: $letter-spacing; }
+  @if $text-transform { text-transform: $text-transform; }
+
+  font-size: map-get($type-sizes, $name);
+  line-height: map-get($line-heights, $name);
+}
+
+@mixin title-1  { @include setup-type('title-1', $text-weight-black, 3.2px, uppercase); }
+@mixin title-2  { @include setup-type('title-2', $text-weight-bold); }
+@mixin title-3  { @include setup-type('title-3', $text-weight-medium); }
+@mixin title-4  { @include setup-type('title-4', $text-weight-bold, 1.8px, uppercase); }
+@mixin title-5  { @include setup-type('title-5', $text-weight-regular, 2.1px, uppercase); }
+@mixin title-6  { @include setup-type('title-6', $text-weight-black, 3.2px, uppercase); }
+@mixin title-7  { @include setup-type('title-7', $text-weight-bold); }
+@mixin title-8  { @include setup-type('title-8', $text-weight-medium); }
+@mixin title-9  { @include setup-type('title-9', $text-weight-bold, 1.8px, uppercase); }
+@mixin title-10 { @include setup-type('title-10', $text-weight-regular, 2.1px, uppercase); }
+
+@mixin body-1 { @include setup-type('body-1'); }
+@mixin body-2 { @include setup-type('body-2'); }
+@mixin body-3 { @include setup-type('body-3'); }
+@mixin body-4 { @include setup-type('body-4'); }
+
+@mixin component-1 { @include setup-type('component-1', $text-weight-medium, .25px, uppercase); }
+@mixin component-2 { @include setup-type('component-2'); }
+@mixin component-3 { @include setup-type('component-3', $text-weight-medium, .25px, uppercase); }
+@mixin component-4 { @include setup-type('component-4'); }
+
+html {
+  font-size: 16px;
+  font-family: $font-family-default;
+  color: $color-charcoal;
+}
+
+.type-headline {
+  @include title-1;
+
+  &.as-sm { @include title-6; }
+
+  @include breakpoint(sm) {
+    @include title-6;
+  }
+}
+
+.type-page-header {
+  @include title-2;
+
+  &.as-sm { @include title-7; }
+
+  @include breakpoint(sm) {
+    @include title-7;
+  }
+}
+
+.type-primary-heading {
+  @include title-3;
+
+  &.as-sm { @include title-8; }
+
+  @include breakpoint(sm) {
+    @include title-8;
+  }
+}
+
+.type-section-header {
+  @include title-4;
+
+  &.as-sm { @include title-9; }
+
+  @include breakpoint(sm) {
+    @include title-9;
+  }
+}
+
+.type-eyebrow {
+  @include title-5;
+
+  &.as-sm { @include title-10; }
+
+  @include breakpoint(sm) {
+    @include title-10;
+  }
+}
+
+.type-large-body-copy {
+  @include body-1;
+
+  &.as-sm { @include body-2; }
+
+  @include breakpoint(sm) {
+    @include body-2;
+  };
+}
+
+.type-standard-body-copy {
+  @include body-2;
+
+  &.as-sm { @include body-3; }
+
+  @include breakpoint(sm) {
+    @include body-3;
+  };
+}
+
+.type-small-body-copy {
+  @include body-3;
+}
+
+@each $name, $size in $spacing-sizes {
+  .p-#{$name}  { padding: $size; }
+  .py-#{$name} { padding-top: $size; padding-bottom: $size; }
+  .px-#{$name} { padding-left: $size; padding-right: $size; }
+  .pt-#{$name} { padding-top: $size; }
+  .pr-#{$name} { padding-right: $size; }
+  .pb-#{$name} { padding-bottom: $size; }
+  .pl-#{$name} { padding-left: $size; }
+  .m-#{$name}  { margin: $size; }
+  .my-#{$name} { margin-top: $size; margin-bottom: $size; }
+  .mx-#{$name} { margin-left: $size; margin-right: $size; }
+  .mt-#{$name} { margin-top: $size; }
+  .mr-#{$name} { margin-right: $size; }
+  .mb-#{$name} { margin-bottom: $size; }
+  .ml-#{$name} { margin-left: $size; }
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

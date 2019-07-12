@@ -1,0 +1,355 @@
+@import "./css/base/setup";
+@import "./css/base/colors";
+@import "./css/base/spacing";
+@import "./css/components/rules";
+@import "./css/base/typography";
+
+/// Map deep get
+/// @author Hugo Giraudel
+/// @access public
+/// @param {Map} $map - Map
+/// @param {Arglist} $keys - Key chain
+/// @return {*} - Desired value
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+$breakpoints: (
+  xs: (
+    min-width: 0,
+    max-width: 599px
+  ),
+  sm: (
+    min-width: 600px,
+    max-width: 767px
+  ),
+  md: (
+    min-width: 768px,
+    max-width: 991px
+  ),
+  lg: (
+    min-width: 992px,
+    max-width: 1199px
+  ),
+  xl: (
+    min-width: 1200px,
+    max-width: 1799px
+  ),
+  full: (
+    min-width: 1800px,
+    max-width: null
+  )
+);
+
+// Includes a block of styles when breakpoint is EQUAL TO AND SMALLER THAN $breakpoint
+@mixin at-breakpoint($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $max-width: map-deep-get($breakpoints, $breakpoint, max-width);
+    @if ($max-width == null) {
+      @content;
+    } @else {
+      @media screen and (max-width: $max-width) {
+        @content;
+      }
+    }
+  }
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+
+$font-sizes: (
+  f1:  0.8125rem,
+  f2:  0.875rem,
+  f3:  1rem,
+  f4:  1.125rem,
+  f5:  1.25rem,
+  f6:  1.5rem,
+  f7:  1.75rem,
+  f8:  2rem,
+  f9:  2.25rem,
+  f10: 2.5rem,
+);
+
+@function font-size($size) {
+  @return map-get($font-sizes, $size);
+}
+
+@function to-string($value) {
+  @return inspect($value);
+}
+
+@function heading-line-height($font-size) {
+  @return ceil(($font-size * 1.25) / 0.25rem) * 0.25rem;
+}
+
+@function body-line-height($font-size) {
+  @return ceil(($font-size * 1.5) / 0.25rem) * 0.25rem;
+}
+
+@function component-line-height($font-size) {
+  @return ceil($font-size);
+}
+
+@function normalized-font-name($name) {
+  @return to-string("f#{$name}");
+}
+
+@mixin body-type($size) {
+  $size: normalized-font-name($size);
+  $font-size: font-size($size);
+  font-size: $font-size;
+  line-height: body-line-height($font-size);
+}
+
+@mixin component-type($size) {
+  $size: normalized-font-name($size);
+  $font-size: font-size($size);
+  font-size: $font-size;
+  line-height: component-line-height($font-size)
+  // line-height: line-height($size, "component");
+}
+
+@mixin heading-type($size) {
+  $size: normalized-font-name($size);
+  $font-size: font-size($size);
+  font-size: $font-size;
+  line-height: heading-line-height($font-size);
+}
+
+@mixin page-header {
+  @include heading-type(9);
+  font-weight: $font-weight-medium;
+  margin-bottom: spacing(sm);
+
+  @include at-breakpoint(md) {
+    @include heading-type(8);
+  };
+
+  @include at-breakpoint(xs) {
+    @include heading-type(7);
+  };
+}
+
+@mixin primary-heading {
+  @include heading-type(7);
+  font-weight: $font-weight-regular;
+  margin-bottom: spacing(sm);
+
+  @include at-breakpoint(md) {
+    @include heading-type(6);
+  };
+
+  @include at-breakpoint(xs) {
+    @include heading-type(5 );
+  };
+}
+
+@mixin section-header {
+  @include heading-type(3);
+  font-weight: $font-weight-bold;
+  margin-bottom: spacing(sm);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+
+  @include at-breakpoint(md) {
+    @include heading-type(2);
+  };
+}
+
+@mixin eyebrow {
+  @include heading-type(2);
+  font-weight: $font-weight-regular;
+  letter-spacing: 2.1px;
+  text-transform: uppercase;
+}
+
+@mixin body-copy {
+  @include body-type(4);
+}
+
+@mixin large-body-copy {
+  @include body-type(5);
+
+  @include at-breakpoint(xs) {
+    @include heading-type(4);
+  };
+}
+
+@mixin small-body-copy {
+  @include body-type(3);
+}
+
+@mixin caption {
+  @include body-type(2);
+}
+
+body {
+  background: linear-gradient(
+    to bottom,
+    #ffffff,
+    #ffffff 50%,
+    rgba(0,0,0,0.06) 50%,
+    rgba(0,0,0,0.06)
+  );
+  background-size: 100% 0.5rem;
+}
+
+p {
+  margin: 0;
+}
+
+p + p {
+  margin-top: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 { margin: 0; }
+
+h1 { @include page-header; }
+h2 { @include primary-heading; }
+h3 { @include section-header; }
+h4 { @include eyebrow; }
+
+.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8, .t9, .t10 {
+  // background-color: rgba(0,0,0,0.1);
+  transition: font-size 0.2s;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, .h7, .h8, .h9, .h10,
+.b1, .b2, .b3, .b4, .b5, .b6, .b7, .b8, .b9, .b10,
+.c1, .c2, .c3, .c4, .c5, .c6, .c7, .c8, .c9, .c10 {
+  // background-color: rgba(0,0,0,0.1);
+  transition: font-size 0.2s;
+  margin-bottom: 0.5rem;
+}
+
+.h1 { @include heading-type(1); }
+.h2 { @include heading-type(2); }
+.h3 { @include heading-type(3); }
+.h4 { @include heading-type(4); }
+.h5 { @include heading-type(5); }
+.h6 { @include heading-type(6); }
+.h7 { @include heading-type(7); }
+.h8 { @include heading-type(8); }
+.h9 { @include heading-type(9); }
+.h10 { @include heading-type(10); }
+
+.b1 { @include body-type(1); }
+.b2 { @include body-type(2); }
+.b3 { @include body-type(3); }
+.b4 { @include body-type(4); }
+.b5 { @include body-type(5); }
+.b6 { @include body-type(6); }
+.b7 { @include body-type(7); }
+.b8 { @include body-type(8); }
+.b9 { @include body-type(9); }
+.b10 { @include body-type(10); }
+
+.c1 { @include component-type(1); }
+.c2 { @include component-type(2); }
+.c3 { @include component-type(3); }
+.c4 { @include component-type(4); }
+.c5 { @include component-type(5); }
+.c6 { @include component-type(6); }
+.c7 { @include component-type(7); }
+.c8 { @include component-type(8); }
+.c9 { @include component-type(9); }
+.c10 { @include component-type(10); }
+
+
+.t1 {
+  font-size: 0.8125rem;
+  line-height: 1rem;
+}
+.t2 {
+  font-size: 0.875rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2.1px;
+}
+.t3 {
+  font-size: 1rem;
+  line-height: 1rem;
+}
+.t4 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+}
+.t5 {
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+}
+.t6 {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+}
+.t7 {
+  font-size: 1.75rem;
+  line-height: 2rem;
+}
+.t8 {
+  font-size: 2rem;
+  line-height: 2rem;
+}
+.t9 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+
+  @media screen and (max-width: 500px) {
+    font-size: 1.75rem;
+    line-height: 2rem;
+  }
+}
+.t10 {
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.content-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1280px;
+  padding-left: spacing(lg);
+  padding-right: spacing(lg);
+}
+
+.background-rule {
+  @include background-rule($color-grey-50);
+}
+
+.page-header {
+  @include page-header;
+}
+
+.body-copy {
+  @include body-copy;
+}
+
+.large-body-copy {
+  @include large-body-copy;
+}
+
+.small-body-copy {
+  @include small-body-copy;
+}
+
+.caption {
+  @include caption;
+}
+
+.spacing-example {
+  & > div {
+    margin-bottom: spacing(md);
+    margin-top: spacing(md);
+  }
+  .xs { background-color:  #FC9100; min-height: spacing(xs); }
+  .sm { background-color:  #9AC72F; min-height: spacing(sm); }
+  .md { background-color:  #854CFF; min-height: spacing(md); }
+  .lg { background-color:  #D03200; min-height: spacing(lg); }
+  .xl { background-color:  #56BFED; min-height: spacing(xl); }
+  .xxl { background-color: #FEE939; min-height: spacing(xxl); }
+}
